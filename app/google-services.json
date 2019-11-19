@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "97670811850-j7237qppggn8pgqttsochh4q7k0emuut.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miage.gruppetto",
+            "certificate_hash": "50dd1389943b869f55b03867074eb3d1b956ff34"
+          }
+        },
+        {
           "client_id": "97670811850-eqj4crh1okiibb1lm0rr0jgn172s5ipv.apps.googleusercontent.com",
           "client_type": 3
         }
