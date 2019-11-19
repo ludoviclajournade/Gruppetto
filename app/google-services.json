@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "97670811850",
+    "firebase_url": "https://gruppetto-8e5ce.firebaseio.com",
+    "project_id": "gruppetto-8e5ce",
+    "storage_bucket": "gruppetto-8e5ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97670811850:android:c6ddbd188f3d005f8da433",
+        "android_client_info": {
+          "package_name": "com.miage.gruppetto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97670811850-eqj4crh1okiibb1lm0rr0jgn172s5ipv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwRHr4dGl-9_c2dPz6KCqraRnba8bjiko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97670811850-eqj4crh1okiibb1lm0rr0jgn172s5ipv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
