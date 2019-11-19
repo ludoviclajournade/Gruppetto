@@ -1,53 +1,39 @@
-package com.miage.gruppetto;
+package com.miage.gruppetto.ui.login;
 
 import android.app.Activity;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.google.android.material.navigation.NavigationView;
-import com.miage.gruppetto.ui.login.LoggedInUserView;
-import com.miage.gruppetto.ui.login.LoginFormState;
-import com.miage.gruppetto.ui.login.LoginResult;
-import com.miage.gruppetto.ui.login.LoginViewModel;
-import com.miage.gruppetto.ui.login.LoginViewModelFactory;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.miage.gruppetto.MapsActivity;
+import com.miage.gruppetto.R;
 import com.miage.gruppetto.ui.login.LoginViewModel;
 import com.miage.gruppetto.ui.login.LoginViewModelFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
+
     private LoginViewModel loginViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
@@ -133,19 +119,15 @@ public class MainActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
-
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // initiate successful logged in experience
-        Intent myIntent = new Intent(this, MapsActivity.class);
-        startActivity(myIntent);
+        // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
-
 }
