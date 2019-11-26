@@ -13,7 +13,7 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Connexion</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Se connecter</string>
@@ -23,11 +23,15 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_iwas_here">IWasHere</string>
+    <string name="title_activity_iwas_here">J\'y étais !</string>
     <string name="message">Tapez votre message :</string>
     <string name="messages_publies">Messages publiés :</string>
     <string name="contenu_message">Message :</string>
     <string name="jy_etais">J\'y étais !</string>
     <string name="bouton_valider">Valider</string>
     <string name="bouton_annuler">Annuler</string>
+    <string name="date">Le </string>
+    <string name="lieu"> à  </string>
+    <string name="participe"> Je participe à l\'évènement :  </string>
+    <string name="title_activity_join">Participe</string>
 </resources>
