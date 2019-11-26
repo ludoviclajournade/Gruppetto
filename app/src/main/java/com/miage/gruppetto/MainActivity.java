@@ -52,25 +52,34 @@ import com.miage.gruppetto.ui.login.LoginViewModel;
 import com.miage.gruppetto.ui.login.LoginViewModelFactory;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private FirebaseAuth mAuth;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    ProgressBar loadingProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Init Views
         setContentView(R.layout.activity_login);
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
+        loginButton = findViewById(R.id.login);
+        loadingProgressBar = findViewById(R.id.loading);
+
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -99,12 +108,13 @@ public class MainActivity extends AppCompatActivity {
                     showLoginFailed(loginResult.getError());
                 }
                 if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
+                    // Get user credidentials
+                    final String email = usernameEditText.getText().toString();
+                    Log.d("[INFO]", "email="+email);
+                    final String password = passwordEditText.getText().toString();
+                    Log.d("[INFO]", "password="+password);
+                    signInUser(email,password);
                 }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                finish();
             }
         });
 
@@ -157,70 +167,66 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        String email="test@gmail.com";
-        String password="password";
+    private void showLoginFailed(@StringRes Integer errorString) {
+        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
 
-
-
-        System.out.println("On commence la connection");
-
+    private void registerClient(String email, String password) {
         // Register User
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            System.out.println("Success");
                             // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "createUserWithEmail:success");
+                            Log.d("Success", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            System.out.println("user inside="+user.getDisplayName());
-                            //updateUI(user);
-                        } else {
-                            System.out.println("Echec");
-                            // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                              //      Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-        System.out.println("On fini la connection");
-
-        // SignIn User
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            System.out.println("user inside 2="+user.getDisplayName());
-                            //updateUI(user);
+                            startNextActivity();
                         } else {
                             // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                              //      Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
+                            Log.w("Failure", "createUserWithEmail:failure", task.getException());
 
-                        // ...
+                        }
                     }
                 });
+    }
 
+    private void signInUser(final String email, final String password) {
+
+        // SignIn User into firebase
+        Task<AuthResult> authResultTask = mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("[INFO]", "signInUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        startNextActivity();
+
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("[INFO]", "signInUserWithEmail:failure", task.getException());
+                        registerClient(email,password);
+                    }
+                }
+            });
+    }
+
+    private void startNextActivity() {
+        Intent myIntent = new Intent(this, HomeActivity.class);
+        startActivity(myIntent);
+        Log.d("[INFO]", "Connexion successfull");
+        setResult(Activity.RESULT_OK);
+    }
+
+    private void clientInfos() {
         // Get user infos
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
             String name = user.getDisplayName();
-            email = user.getEmail();
+            String email = user.getEmail();
             Uri photoUrl = user.getPhotoUrl();
 
             // Check if user's email is verified
@@ -231,20 +237,7 @@ public class MainActivity extends AppCompatActivity {
             // FirebaseUser.getIdToken() instead.
             String uid = user.getUid();
         }
-        System.out.println("user="+user.getDisplayName());
-
-
-
-
-
-
-        Intent myIntent = new Intent(this, HomeActivity.class);
-        startActivity(myIntent);
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-    }
 
 }

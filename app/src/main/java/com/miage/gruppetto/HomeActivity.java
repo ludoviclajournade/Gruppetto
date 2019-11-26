@@ -1,6 +1,8 @@
 package com.miage.gruppetto;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -15,14 +17,20 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,6 +55,30 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            // Name, email address, and profile photo Url
+            String name = currentUser.getDisplayName();
+            String email = currentUser.getEmail();
+            Uri photoUrl = currentUser.getPhotoUrl();
+
+            // Check if user's email is verified
+            boolean emailVerified = currentUser.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            String uid = currentUser.getUid();
+            Log.d("[INFO]", "name=" + name + ", email=" + email);
+        } else {
+            Log.d("[INFO]", "User is null");
+        }
     }
 
     @Override
