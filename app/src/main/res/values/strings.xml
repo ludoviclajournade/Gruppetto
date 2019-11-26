@@ -23,4 +23,11 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_iwas_here">IWasHere</string>
+    <string name="message">Tapez votre message :</string>
+    <string name="messages_publies">Messages publiés :</string>
+    <string name="contenu_message">Message :</string>
+    <string name="jy_etais">J\'y étais !</string>
+    <string name="bouton_valider">Valider</string>
+    <string name="bouton_annuler">Annuler</string>
 </resources>
