@@ -193,6 +193,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signInUser(final String email, final String password) {
+        startNextActivity(); //TODO Remove this line
+        Log.d("[INFO]", "signInUser:start");
 
         // SignIn User into firebase
         Task<AuthResult> authResultTask = mAuth.signInWithEmailAndPassword(email, password)
@@ -201,17 +203,18 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d("[INFO]", "signInUserWithEmail:success");
+                        Log.d("[INFO]", "signInUser:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                         startNextActivity();
 
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w("[INFO]", "signInUserWithEmail:failure", task.getException());
+                        Log.w("[INFO]", "signInUser:failure", task.getException());
                         registerClient(email,password);
                     }
                 }
             });
+        Log.d("[INFO]", "signInUser:end");
     }
 
     private void startNextActivity() {
