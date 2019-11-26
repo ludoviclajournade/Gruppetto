@@ -34,4 +34,7 @@
     <string name="lieu"> à  </string>
     <string name="participe"> Je participe à l\'évènement :  </string>
     <string name="title_activity_join">Participe</string>
+    <string name="title_activity_add_event">Ajouter un évènement</string>
+    <string name="nameEvent"> Nom de l\'évènement :  </string>
+    <string name="localisation"> Lieu / localisation : </string>
 </resources>
