@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.miage.gruppetto.IWasHere;
 import com.miage.gruppetto.R;
 
 public class HomeFragment extends Fragment {
@@ -38,9 +41,22 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        View v = inflater.inflate(R.layout.fragment_home, null);
+        Button buttonJySuis = (Button) v.findViewById(R.id.buttonJysuis);
+        buttonJySuis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(view.getContext(), IWasHere.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
 
         // Google Map
         requestPermissions(INITIAL_PERMS,INITIAL_REQUEST);
@@ -75,4 +91,6 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
+
+
 }

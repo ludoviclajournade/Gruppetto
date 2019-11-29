@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startNextActivity() {
-        Intent myIntent = new Intent(this, AddEvent.class);
+        Intent myIntent = new Intent(this, HomeActivity.class);
         startActivity(myIntent);
         Log.d("[INFO]", "Connexion successfull");
         setResult(Activity.RESULT_OK);

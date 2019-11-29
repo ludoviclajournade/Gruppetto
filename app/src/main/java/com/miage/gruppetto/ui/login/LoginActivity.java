@@ -5,7 +5,6 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -23,10 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.miage.gruppetto.MapsActivity;
 import com.miage.gruppetto.R;
-import com.miage.gruppetto.ui.login.LoginViewModel;
-import com.miage.gruppetto.ui.login.LoginViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
