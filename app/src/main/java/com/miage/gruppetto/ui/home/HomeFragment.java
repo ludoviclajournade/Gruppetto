@@ -3,6 +3,7 @@ package com.miage.gruppetto.ui.home;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,17 +46,6 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-
-
-        View v = inflater.inflate(R.layout.fragment_home, null);
-        Button buttonJySuis = (Button) v.findViewById(R.id.buttonJysuis);
-        buttonJySuis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), IWasHere.class);
-                startActivityForResult(myIntent, 0);
-            }
-        });
 
 
         // Google Map

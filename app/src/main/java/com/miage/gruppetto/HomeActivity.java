@@ -94,6 +94,24 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        Button buttonJySuis = (Button) findViewById(R.id.buttonJysuis);
+        buttonJySuis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(view.getContext(), IWasHere.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
+        Button buttonParticipation = (Button) findViewById(R.id.buttonParticipation);
+        buttonParticipation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(view.getContext(), Join.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
         return true;
     }
 
