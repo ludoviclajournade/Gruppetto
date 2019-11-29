@@ -38,12 +38,14 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        // Google Map
+        requestPermissions(INITIAL_PERMS,INITIAL_REQUEST);
+
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Google Map
-        requestPermissions(INITIAL_PERMS,INITIAL_REQUEST);
+
         mMapView = root.findViewById(R.id.homeMapView);
         mMapView.onCreate(savedInstanceState);
 
