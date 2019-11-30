@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -79,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        signInUser("polulupo@hotmail.fr","popopo666"); //TODO Remove this linex
     }
 
 
@@ -193,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signInUser(final String email, final String password) {
-        startNextActivity(); //TODO Remove this line
         Log.d("[INFO]", "signInUser:start");
 
         // SignIn User into firebase
@@ -213,7 +214,27 @@ public class MainActivity extends AppCompatActivity {
                         registerClient(email,password);
                     }
                 }
+            })
+            .addOnSuccessListener(this, new OnSuccessListener<AuthResult>(){
+
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    Log.d("INFO","onSuccess");
+                }
+            })
+            .addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("MainActivity","onFailture:start");
+                }
             });
+        if(authResultTask.isSuccessful()) {
+            Log.e("MainActivity","Authentification success");
+        } else if(mAuth.getCurrentUser() != null) {
+            startNextActivity();
+        } else {
+            Log.e("MainActivity","Authentification failure");
+        }
         Log.d("[INFO]", "signInUser:end");
     }
 
@@ -222,25 +243,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(myIntent);
         Log.d("[INFO]", "Connexion successfull");
         setResult(Activity.RESULT_OK);
-    }
-
-    private void clientInfos() {
-        // Get user infos
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            String uid = user.getUid();
-        }
     }
 
 

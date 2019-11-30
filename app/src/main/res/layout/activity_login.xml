@@ -54,6 +54,8 @@
         android:layout_marginBottom="64dp"
         android:background="#2196F3"
         android:enabled="false"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="@string/action_sign_in"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
