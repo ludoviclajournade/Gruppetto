@@ -16,11 +16,14 @@
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Connection</string>
+    <string name="action_sign_in">S\'inscrire/Se connecter</string>
     <string name="action_sign_in_short">Connexion</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_maps">Map</string>
+    <string name="showUser">Utilisateurs</string>
+    <string name="userMenu">Utilisateur</string>
+    <string name="menu_user">User menu</string>
 </resources>

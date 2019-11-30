@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -158,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        signInUser("polulupo@hotmail.fr","popopo666"); //TODO Remove this linex
     }
 
     @Override
@@ -192,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signInUser(final String email, final String password) {
-        startNextActivity(); //TODO Remove this line
         Log.d("[INFO]", "signInUser:start");
 
         // SignIn User into firebase

@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "97670811850-8lr15pddrgqm30d06p4citqitlje87ri.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miage.gruppetto",
+            "certificate_hash": "7055f7b6e682910a7979f8b0dd01a78017fefad3"
+          }
+        },
+        {
+          "client_id": "97670811850-omg150lp6t6inj52kbue2k53an4rjn0a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miage.gruppetto",
+            "certificate_hash": "8de0ed5c99cdca9226eb7e1512a05730fc01dc06"
+          }
+        },
+        {
           "client_id": "97670811850-j7237qppggn8pgqttsochh4q7k0emuut.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
