@@ -10,7 +10,17 @@
         android:layout_height="match_parent" >
 
         <Button
-            android:id="@+id/buttonJysuis"
+            android:id="@+id/button_showMarkers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginBottom="105dp"
+            android:text="Markers" />
+
+        <Button
+            android:id="@+id/button_iwashere"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -21,7 +31,7 @@
             android:id="@+id/buttonParticipation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/buttonJysuis"
+            android:layout_alignBottom="@id/button_iwashere"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="0dp"
