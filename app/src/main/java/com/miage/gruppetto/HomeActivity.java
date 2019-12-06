@@ -1,6 +1,10 @@
 package com.miage.gruppetto;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +25,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.miage.gruppetto.ui.home.HomeFragment;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
+
 public class HomeActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
@@ -37,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -51,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
     }
+
 
     @Override
     public void onStart() {
@@ -77,6 +86,33 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @return String[long,lat]
+     */
+    @SuppressLint("WrongConstant")
+    private double[] getLongLat() {
+        double[] longLat = new double[2];
+        LocationManager locationManager = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LocationManager.class);
+        }
+        String provider = LocationManager.GPS_PROVIDER;
+
+        if ( getApplicationContext().checkCallingOrSelfPermission("") <= 1) {
+            Log.d("Location",">=1");
+            Location location = locationManager.getLastKnownLocation(provider);
+
+            longLat[0] = location.getLongitude();
+            longLat[1] = location.getLatitude();
+
+            Log.d("Location",">=1 worked");
+        } else {
+            Log.d("Location","<=1");
+        }
+
+        return longLat;
+    }
 
 
     @Override

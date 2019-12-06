@@ -25,8 +25,10 @@ import java.util.ArrayList;
 
 public class LocationsRunnable implements Runnable {
     private Context context;
-    private JSONObject message;
+    private JSONObject jsonObject;
     private AsyncResponse asyncResponse;
+    private String ressource;
+    private String url = "http://10.0.2.2:5000";
 
     public LocationsRunnable(Context c) {
         super();
@@ -35,7 +37,7 @@ public class LocationsRunnable implements Runnable {
 
     public LocationsRunnable(Context c, JSONObject json) {
         this(c);
-        message = json;
+        jsonObject = json;
     }
 
     public LocationsRunnable(Context c, AsyncResponse asyncResponse) {
@@ -43,27 +45,39 @@ public class LocationsRunnable implements Runnable {
         this.asyncResponse=asyncResponse;
     }
 
-    @Override
-    public void run() {
-
-        if(message == null) {
-            consumeGetREST();
-        } else {
-            sendPOST(message);
-        }
+    public LocationsRunnable(Context c, AsyncResponse asyncResponse, JSONObject json, String ressource) {
+        this(c,asyncResponse);
+        this.jsonObject=json;
+        this.ressource=ressource;
     }
 
+    @Override
+    public void run() {
+        if(jsonObject == null || ressource!=null) {
+            consumeGetREST();
+        } else {
+            sendPOST(jsonObject);
+        }
+
+
+    }
     private void consumeGetREST() {
         try {
             asyncResponse.setFinished(false);
-            asyncResponse.setMonString("mon string est awesome");
 
             // init variables
             ArrayList<Location> locations = new ArrayList<>();
             Location location = new Location();
 
             // Create URL
-            URL myUrl = new URL("http://10.0.2.2:5000/locations");
+            URL myUrl;
+            if(ressource != null) {
+                myUrl= new URL(url+ressource);
+            } else {
+                myUrl = new URL(url+"/locations");
+            }
+            Log.d("LocationsRunnable","myUurl:"+myUrl);
+
 
             // Create connection
             HttpURLConnection myConnection = (HttpURLConnection) myUrl.openConnection();
@@ -87,59 +101,63 @@ public class LocationsRunnable implements Runnable {
                 JsonReader jsonReader = new JsonReader(responseBodyReader);
 
                 // Consume Json
-                jsonReader.beginArray(); // Start processing the JSON object
-                jsonReader.beginObject();
-                while (jsonReader.hasNext()) { // Loop through all keys
-                    // Fetch the next key
-                    String key = jsonReader.nextName();
-                    Log.d("LocationsRunnable","key:"+key);
+                try {
+                    jsonReader.beginArray(); // Start processing the JSON object
+                    jsonReader.beginObject();
+                    while (jsonReader.hasNext()) { // Loop through all keys
+                        // Fetch the next key
+                        String key = jsonReader.nextName();
+                        //Log.d("LocationsRunnable","key:"+key);
 
-                    switch (key) {
-                        case "lng":
-                            location.setLng(jsonReader.nextDouble());
-                            try {
-                                locations.add(location);
-                                location = new Location();
-                                jsonReader.endObject();
-                                jsonReader.beginObject();
-                            } catch(IllegalStateException e) {
-                                Log.d("LocationsRunnable","jsonReader:end");
-                            }
-                            break;
-                        case "lat":
-                            location.setLat(jsonReader.nextDouble());
-                            break;
-                        case "id":
-                            location.setId(jsonReader.nextInt());
-                            break;
-                        case "user":
-                            //jsonReader.skipValue(); // Skip values of other keys
-                            location.setUser(jsonReader.nextString());
-                            break;
-                        case "horodatage":
-                            location.setHorodatage(jsonReader.nextString());
-                            break;
-                        case "message":
-                            location.setMessage(jsonReader.nextString());
-                            break;
-                        default:
-                            jsonReader.skipValue(); // Skip values of other keys
-                            break;
+                        switch (key) {
+                            case "lng":
+                                location.setLng(jsonReader.nextDouble());
+                                break;
+                            case "lat":
+                                location.setLat(jsonReader.nextDouble());
+                                break;
+                            case "id":
+                                location.setId(jsonReader.nextInt());
+                                break;
+                            case "user":
+                                location.setUser(jsonReader.nextString());
+                                try {
+                                    locations.add(location);
+                                    location = new Location();
+                                    jsonReader.endObject();
+                                    jsonReader.beginObject();
+                                } catch (IllegalStateException e) {
+                                    Log.d("LocationsRunnable", "jsonReader:finished");
+                                }
+                                break;
+                            case "horodatage":
+                                location.setHorodatage(jsonReader.nextString());
+                                break;
+                            case "message":
+                                location.setMessage(jsonReader.nextString());
+                                break;
+                            default:
+                                jsonReader.skipValue(); // Skip values of other keys
+                                break;
 
+                        }
                     }
+                } catch (IllegalStateException e) {
+                    Log.e("IllegalStateException",e.toString());
+                } finally {
+
+                    // Close Json reader
+                    jsonReader.close();
+
+                    // Disconnect
+                    myConnection.disconnect();
+
+                    // Set positions
+                    asyncResponse.setLocations(locations);
+
+                    // Finished
+                    asyncResponse.setFinished(true);
                 }
-
-                // Close Json reader
-                jsonReader.close();
-
-                // Disconnect
-                myConnection.disconnect();
-
-                // Finished
-                asyncResponse.setFinished(true);
-
-                // Set positions
-                asyncResponse.setLocations(locations);
 
             } else {
                 // Finished

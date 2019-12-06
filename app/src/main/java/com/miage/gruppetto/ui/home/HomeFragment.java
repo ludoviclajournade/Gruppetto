@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
@@ -47,7 +48,7 @@ public class HomeFragment extends Fragment implements AsyncResponse {
     private FirebaseAuth mAuth;
     private MyRestAPI myRestAPI;
     private String monString;
-    private ArrayList<com.miage.gruppetto.data.Location> locations;
+    public static ArrayList<com.miage.gruppetto.data.Location> locations;
     private boolean threadFinished = false;
 
     private static final String[] INITIAL_PERMS = {
@@ -61,6 +62,11 @@ public class HomeFragment extends Fragment implements AsyncResponse {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Get Location array
+        MyRestAPI myRestAPI = new MyRestAPI();
+        LocationsRunnable locationsRunnable = new LocationsRunnable(getContext(),this,null,"/locationsUser/"+mAuth.getCurrentUser().getEmail());
+        myRestAPI.execute(locationsRunnable);
+
         // Add on click  listener
 
         Button buttonJySuis = (Button) getActivity().findViewById(R.id.button_iwashere);
@@ -68,6 +74,13 @@ public class HomeFragment extends Fragment implements AsyncResponse {
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(view.getContext(), IWasHere.class);
+                // Get current position
+                double[] longLat = getLongLat();
+                double lat = longLat[1];
+                double lng = longLat[0];
+                myIntent.putExtra("lat", lat);
+                myIntent.putExtra("lng",lng);
+                Log.d("HomeFragmenet","Start Intent, putExtra(lat:"+lat+", lng:"+lng+")");
                 startActivityForResult(myIntent, 0);
             }
         });
@@ -87,6 +100,7 @@ public class HomeFragment extends Fragment implements AsyncResponse {
             public void onClick(View view) {
                 // Get user locations
                 onClickButtonMarkers();
+                Log.d("HomeFragment","buttonmarkers:clicked");
 
 
             }
@@ -94,34 +108,33 @@ public class HomeFragment extends Fragment implements AsyncResponse {
     }
 
     private void onClickButtonMarkers() {
-        myRestAPI.execute(new LocationsRunnable(getContext(),this));
-        Log.d("HomeFragment","monString:"+getMonString());
-        Log.d("HomeFragment:finished","status:"+myRestAPI.getStatus());
-        int i=0;
-        while (!threadFinished) {
-            // Wait
-            i++;
-            Log.d("HomeFragment","threadFinished(i):"+threadFinished+"("+i+")");
-        }
-        Log.d("HomeFragment","threadFinished(i):"+threadFinished+"("+i+")");
+
+        //Log.d("HomeFragment","threadFinished(i):"+threadFinished+"("+i+"), statut:" + myRestAPI.getStatus());
         setFinished(false);
+        ArrayList<LatLng> latLngArr = new ArrayList<>();
+        boolean alreadyExist = false;
         if (locations != null) {
             Log.d("HomeFragment", "Locations(size):" + locations.size());
             for(com.miage.gruppetto.data.Location location : locations) {
-                Log.d("HomeFragment","location:"+location.toString());
-                LatLng position = new LatLng(location.getLat(),location.getLng());
-                googleMap.addMarker(new MarkerOptions().position(position).title("my title").snippet("my description"));
+                Log.d("HomeFragment","location.user:"+location.getUser()+", mAuth.user:"+mAuth.getCurrentUser().getEmail());
+                if(location.getUser().equals(mAuth.getCurrentUser().getEmail())) { // if it's our user
+                    Log.d("HomeFragment", "location:" + location.toString());
+                    LatLng position = new LatLng(location.getLat(), location.getLng());
+                    for (LatLng latLng : latLngArr) {
+                        if (latLng.longitude == position.longitude && latLng.latitude == position.latitude) {
+                            alreadyExist=true;
+                        }
+                    }
+                    if (!alreadyExist) {
+                        googleMap.addMarker(new MarkerOptions().position(position).title("my title").snippet("my description"));
+                        latLngArr.add(position);
+                        alreadyExist=false;
+                    }
+                }
             }
         } else {
             Log.d("HomeFragment","Locations:null");
         }
-        // Get current position
-        double[] longLat = getLongLat();
-        double lat = longLat[0];
-        double lng = longLat[1];
-        LatLng myPosition = new LatLng(lng, lat);
-        Log.d("[INFO]", "HomeFragment:markerAtCurrentPosition:lat=" + lat + ", lng=" + lng);
-        googleMap.addMarker(new MarkerOptions().position(myPosition).title("my title").snippet("my description"));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -161,10 +174,31 @@ public class HomeFragment extends Fragment implements AsyncResponse {
 
                 // Get current position
                 double[] longLat = getLongLat();
-                double lat = longLat[0];
-                double lng = longLat[1];
-                LatLng myPosition = new LatLng(lng, lat);
-                Log.d("[INFO]", "HomeFragment:markerAtCurrentPosition:lat=" + lat + ", lng=" + lng);
+                double lat = longLat[1];
+                double lng = longLat[0];
+
+                // Check if the position already exist, if it's true, add it for the user
+                for (com.miage.gruppetto.data.Location location : locations) {
+                    double latDiff = lat - location.getLat();
+                    double lngDiff = lng - location.getLng();
+                    boolean latDiffIsOk = false;
+                    boolean lngDiffIsOk = false;
+                    double tolerence = 0.0001;
+                    if ((latDiff <= tolerence && latDiff >= 0) || (latDiff >= -tolerence && latDiff <= 0)) {
+                        latDiffIsOk = true;
+                    }
+                    if ((lngDiff <= 5 && lngDiff >= 0) || (lngDiff >= -5 && lngDiff <= 0)) {
+                        lngDiffIsOk = true;
+                    }
+
+                    if (lngDiffIsOk && latDiffIsOk) {
+                        lat=location.getLat();
+                        lng=location.getLng();
+                    }
+                }
+
+                LatLng myPosition = new LatLng(lat, lng);
+                Log.d("HomeFragment", "markerAtCurrentPosition:lat=" + lat + ", lng=" + lng);
 
                 // Get extra
                 String iWasHereMessage;
@@ -187,18 +221,22 @@ public class HomeFragment extends Fragment implements AsyncResponse {
 
                     // Send location to the server to be registered
                     // Init myRestAPI
+                    String horodatage = (System.currentTimeMillis()/1000) + "";
                     JSONObject jsonParam = new JSONObject();
                     try {
                         jsonParam.put("id", "1");
-                        jsonParam.put("user", mAuth.getCurrentUser().getEmail());
-                        jsonParam.put("horodatage", (System.currentTimeMillis()/1000));
+                        jsonParam.put("message",iWasHereMessage);
+                        jsonParam.put("horodatage", horodatage);
                         jsonParam.put("lat",lat);
                         jsonParam.put("lng",lng);
-                        jsonParam.put("message",iWasHereMessage);
+                        jsonParam.put("user", mAuth.getCurrentUser().getEmail());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    Log.d("HomeFragmenet","Add location (lat:"+lat+", lng:"+lng+")");
                     myRestAPI.execute(new LocationsRunnable(getContext(),jsonParam));
+                    com.miage.gruppetto.data.Location location = new com.miage.gruppetto.data.Location(1,mAuth.getCurrentUser().getEmail(),iWasHereMessage, horodatage, lat,lng);
+                    locations.add(location);
                 }
 
                 // For zooming automatically to the location of the marker
@@ -233,16 +271,6 @@ public class HomeFragment extends Fragment implements AsyncResponse {
         }
 
         return longLat;
-    }
-
-    @Override
-    public void setMonString(String s) {
-        this.monString = s;
-    }
-
-    @Override
-    public String getMonString() {
-        return this.monString;
     }
 
     @Override
