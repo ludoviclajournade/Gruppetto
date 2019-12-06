@@ -62,9 +62,12 @@ public class HomeFragment extends Fragment implements AsyncResponse {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Init firebase
+        mAuth = FirebaseAuth.getInstance();
+
         // Get Location array
         MyRestAPI myRestAPI = new MyRestAPI();
-        LocationsRunnable locationsRunnable = new LocationsRunnable(getContext(),this,null,"/locationsUser/"+mAuth.getCurrentUser().getEmail());
+        LocationsRunnable locationsRunnable = new LocationsRunnable(getContext(),this);
         myRestAPI.execute(locationsRunnable);
 
         // Add on click  listener
@@ -118,7 +121,6 @@ public class HomeFragment extends Fragment implements AsyncResponse {
             for(com.miage.gruppetto.data.Location location : locations) {
                 Log.d("HomeFragment","location.user:"+location.getUser()+", mAuth.user:"+mAuth.getCurrentUser().getEmail());
                 if(location.getUser().equals(mAuth.getCurrentUser().getEmail())) { // if it's our user
-                    Log.d("HomeFragment", "location:" + location.toString());
                     LatLng position = new LatLng(location.getLat(), location.getLng());
                     for (LatLng latLng : latLngArr) {
                         if (latLng.longitude == position.longitude && latLng.latitude == position.latitude) {
@@ -126,6 +128,7 @@ public class HomeFragment extends Fragment implements AsyncResponse {
                         }
                     }
                     if (!alreadyExist) {
+                        Log.d("HomeFragment","New Location marker");
                         googleMap.addMarker(new MarkerOptions().position(position).title("my title").snippet("my description"));
                         latLngArr.add(position);
                         alreadyExist=false;
@@ -178,6 +181,7 @@ public class HomeFragment extends Fragment implements AsyncResponse {
                 double lng = longLat[0];
 
                 // Check if the position already exist, if it's true, add it for the user
+                if (locations == null) {locations = new ArrayList<>(); }
                 for (com.miage.gruppetto.data.Location location : locations) {
                     double latDiff = lat - location.getLat();
                     double lngDiff = lng - location.getLng();
@@ -237,6 +241,7 @@ public class HomeFragment extends Fragment implements AsyncResponse {
                     myRestAPI.execute(new LocationsRunnable(getContext(),jsonParam));
                     com.miage.gruppetto.data.Location location = new com.miage.gruppetto.data.Location(1,mAuth.getCurrentUser().getEmail(),iWasHereMessage, horodatage, lat,lng);
                     locations.add(location);
+                    Log.d("HomeFragment","Location added to array");
                 }
 
                 // For zooming automatically to the location of the marker

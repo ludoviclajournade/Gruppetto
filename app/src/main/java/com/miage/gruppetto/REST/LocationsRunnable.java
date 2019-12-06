@@ -123,7 +123,7 @@ public class LocationsRunnable implements Runnable {
                                 location.setUser(jsonReader.nextString());
                                 try {
                                     locations.add(location);
-                                    location = new Location();
+                                    location = new Location(); // Reset
                                     jsonReader.endObject();
                                     jsonReader.beginObject();
                                 } catch (IllegalStateException e) {

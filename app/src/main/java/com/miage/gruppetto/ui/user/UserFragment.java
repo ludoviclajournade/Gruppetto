@@ -1,5 +1,6 @@
 package com.miage.gruppetto.ui.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.miage.gruppetto.R;
+import com.miage.gruppetto.ui.login.LoginActivity;
 
 public class UserFragment extends Fragment {
 
@@ -42,6 +45,18 @@ public class UserFragment extends Fragment {
             {
                 Log.d("[INFO]", "UserFragment:onCreateView:OnClick(button_saveUser)");
                 updateUser();
+            }
+        });
+
+        Button buttonLogOff = (Button) root.findViewById(R.id.button_logoff);
+        buttonLogOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("UserFragment","disconnect");
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                Toast.makeText( getContext(),"Vous avez été déconnectés",Toast.LENGTH_LONG).show();
             }
         });
 
