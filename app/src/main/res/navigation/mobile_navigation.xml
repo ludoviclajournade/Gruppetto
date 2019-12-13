@@ -12,24 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.miage.gruppetto.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.miage.gruppetto.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-
-    <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.miage.gruppetto.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
-
-    <fragment
         android:id="@+id/nav_share"
         android:name="com.miage.gruppetto.ui.share.ShareFragment"
         android:label="@string/menu_share"
@@ -46,4 +28,17 @@
         android:name="com.miage.gruppetto.ui.user.UserFragment"
         android:label="@string/menu_user"
         tools:layout="@layout/fragment_send" />
+
+    <fragment
+        android:id="@+id/nav_listUsers"
+        android:name="com.miage.gruppetto.ui.users.UsersFragment"
+        android:label="@string/liste_des_utilisateurs"
+        tools:layout="@layout/fragment_send" />
+
+    <fragment
+        android:id="@+id/nav_listLocations"
+        android:name="com.miage.gruppetto.ui.locations.ListLocationsFragment"
+        android:label="@string/liste_des_locations"
+        tools:layout="@layout/fragment_send" />
+
 </navigation>

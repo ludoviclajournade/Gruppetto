@@ -1,6 +1,5 @@
 package com.miage.gruppetto;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
@@ -9,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -20,15 +17,19 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.miage.gruppetto.ui.home.HomeFragment;
+import com.miage.gruppetto.dummy.DummyContent;
+import com.miage.gruppetto.ui.locations.ListLocationsFragment;
+import com.miage.gruppetto.ui.users.ListUserLocations;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-import static androidx.core.content.PermissionChecker.checkSelfPermission;
+import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity {
+import static com.miage.gruppetto.ui.home.HomeFragment.locations;
+
+public class HomeActivity extends AppCompatActivity implements usersListFragment.OnListFragmentInteractionListener, ListLocationsFragment.OnListFragmentInteractionListener {
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
 
@@ -50,8 +51,8 @@ public class HomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send,R.id.nav_user)
+                R.id.nav_home, R.id.nav_share, R.id.nav_send,
+                R.id.nav_user,R.id.nav_listUsers,R.id.nav_listLocations)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -130,4 +131,24 @@ public class HomeActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        String user = item.content;
+        Intent intent = new Intent(this, ListUserLocations.class);
+        intent.putExtra("user",user);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onListFragmentInteraction(com.miage.gruppetto.ui.locations.dummy.DummyContent.DummyItem item) {
+        String myLocation = item.content;
+        String[]  latLng = myLocation.replace(")","").replace("(","").split(",");
+        Double lat = new Double(latLng[0]);
+        Double lng = new Double(latLng[1]);
+        Log.d("HomeActivity","lat:"+lat+", lng:"+lng);
+        Intent intent = new Intent(this, ListUserLocations.class);
+        intent.putExtra("lat",lat);
+        intent.putExtra("lng",lng);
+        startActivity(intent);
+    }
 }

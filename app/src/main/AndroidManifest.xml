@@ -12,12 +12,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true"/>
-
-
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -26,11 +23,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".ui.users.ListUserLocations"></activity>
         <activity
             android:name=".AddEvent"
             android:label="@string/title_activity_add_event"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Join"
             android:label="@string/title_activity_join"
@@ -40,13 +37,9 @@
             android:label="@string/title_activity_iwas_here"
             android:theme="@style/AppTheme.NoActionBar" />
 
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
-
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -58,7 +51,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

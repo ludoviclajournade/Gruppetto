@@ -40,5 +40,7 @@
     <string name="showUser">Utilisateurs</string>
     <string name="userMenu">Utilisateur</string>
     <string name="menu_user">User menu</string>
->>>>>>> master
+    <string name="liste_des_utilisateurs">Liste des utilisateurs</string>
+    <string name="liste_des_locations">Liste des locations</string>
+    >>>>>>> master
 </resources>

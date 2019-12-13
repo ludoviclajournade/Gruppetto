@@ -100,7 +100,7 @@ public class IWasHere extends AppCompatActivity implements AsyncResponse {
         // Set list messages of this location
         arrayAdapterListView();
     }
-
+/*
     private void setListMessages() {
 
         // Init myRestAPI
@@ -125,6 +125,7 @@ public class IWasHere extends AppCompatActivity implements AsyncResponse {
         }
 
     }
+*/
 
     private void onClickButtonCancel() {
 
@@ -188,8 +189,8 @@ public class IWasHere extends AppCompatActivity implements AsyncResponse {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                Object clickItemObj = adapterView.getAdapter().getItem(index);
-                Toast.makeText(getApplicationContext(), "You clicked " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();
+                //Object clickItemObj = adapterView.getAdapter().getItem(index);
+                //Toast.makeText(getApplicationContext(), "You clicked " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
