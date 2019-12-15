@@ -116,7 +116,9 @@ public class HomeFragment extends Fragment implements AsyncResponse {
         setFinished(false);
         ArrayList<LatLng> latLngArr = new ArrayList<>();
         boolean alreadyExist = false;
+
         if (locations != null) {
+
             Log.d("HomeFragment", "Locations(size):" + locations.size());
             for(com.miage.gruppetto.data.Location location : locations) {
                 Log.d("HomeFragment","location.user:"+location.getUser()+", mAuth.user:"+mAuth.getCurrentUser().getEmail());
@@ -135,6 +137,11 @@ public class HomeFragment extends Fragment implements AsyncResponse {
                     }
                 }
             }
+            // Get current position
+            double[] longLat = getLongLat();
+            double lat = longLat[1];
+            double lng = longLat[0];
+            LatLng position = new LatLng(lat, lng);
         } else {
             Log.d("HomeFragment","Locations:null");
         }
@@ -220,6 +227,8 @@ public class HomeFragment extends Fragment implements AsyncResponse {
                 }
                 // If message, put marker at current position
                 if (iWasHereMessage != null) {
+                    locations.addAll(locations);
+                    Log.d("test","cestvide");
                     // For dropping a marker at a point on the Map
                     googleMap.addMarker(new MarkerOptions().position(myPosition).title("my title").snippet("my description"));
 

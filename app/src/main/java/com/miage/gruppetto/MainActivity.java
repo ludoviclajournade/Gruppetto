@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signInUser("polulupo@hotmail.fr","popopo666"); //TODO Remove this line
+        //signInUser("polulupo@hotmail.fr","popopo666"); //TODO Remove this line
     }
 
 

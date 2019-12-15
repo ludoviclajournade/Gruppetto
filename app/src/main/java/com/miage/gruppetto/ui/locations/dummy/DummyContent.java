@@ -32,6 +32,7 @@ public class DummyContent {
     private static final int COUNT = 25;
 
     static {
+        Log.d("locations:DummyContent","static");
         // Add some sample items.
         ArrayList<String> myLocation = new ArrayList<>();
         boolean locationAllreadyAdded = false;

@@ -32,13 +32,13 @@ public class DummyContent {
     private static final int COUNT = 25;
 
     static {
+        Log.d("dummy:DummyContent","static");
         // Add some sample items.
         ArrayList<String> users = new ArrayList<>();
         boolean userAllreadyAdded = false;
         int i=0;
         for (Location location : locations ) {
             while ( i < users.size() && !userAllreadyAdded) {
-                Log.d("DummyContent",location.getUser()+"=?"+users.get(i));
                 if (location.getUser().equals(users.get(i))) {
                     userAllreadyAdded=true;
                 }

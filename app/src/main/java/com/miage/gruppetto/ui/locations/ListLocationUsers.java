@@ -2,6 +2,7 @@ package com.miage.gruppetto.ui.locations;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,19 +26,23 @@ public class ListLocationUsers extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user_locations);
+        Log.d("ListLocationUsers","onCreate");
 
         // Retrive intent extrat
         if (savedInstanceState == null) {
             Bundle extras = this.getIntent().getExtras();
             if(extras == null) {
+                Log.d("ListLocationUsers","extras is null");
                 user="unknow";
             } else {
                 user= extras.getString("user");
                 extras.remove("user");
+                Log.d("ListLocationUsers","extras(user:"+user+")");
             }
         } else {
             user = (String) savedInstanceState.getSerializable("user");
             savedInstanceState.remove("user");
+            Log.d("ListLocationUsers","extras(user:"+user+")");
         }
 
         // Fill list

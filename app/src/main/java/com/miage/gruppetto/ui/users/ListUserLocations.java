@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListUserLocations extends AppCompatActivity {
-    private double lat;
-    private double lng;
+    private String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +31,17 @@ public class ListUserLocations extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = this.getIntent().getExtras();
             if(extras == null) {
-                lat=0;
-                lng=0;
+                Log.w("ListUserLocations","extras is null");
+                user=null;
             } else {
-                lat= extras.getDouble("lat");
-                lng= extras.getDouble("lng");
-                extras.remove("lat");
-                extras.remove("lng");
+                user = extras.getString("user");
+                extras.remove("user");
+                Log.d("ListUserLocations","extras(user:"+user+")");
             }
         } else {
-            lat = (Double) savedInstanceState.getSerializable("lat");
-            lng = (Double) savedInstanceState.getSerializable("lng");
-            savedInstanceState.remove("lat");
-            savedInstanceState.remove("lng");
+            user = (String) savedInstanceState.getSerializable("yser");
+            savedInstanceState.remove("user");
+            Log.d("ListUserLocations","extras(user:"+user+")");
         }
 
         // Fill list
@@ -71,23 +68,30 @@ public class ListUserLocations extends AppCompatActivity {
         //setListMessages();
 
         List<String> dataList = new ArrayList<String>();
-        boolean alreadyInDataList = false;
+        boolean alreadyInDataList;
+        Log.d("ListUserLocations","arrayAdapterListView:locations.size("+HomeFragment.locations.size()+")");
         for (int i = 1; i<= HomeFragment.locations.size(); i++) {
+            alreadyInDataList = false;
             Location location = HomeFragment.locations.get(HomeFragment.locations.size()-i);
 
-            if (location.getLat() == lat && location.getLng() == lng) {
+            if (location.getUser().equals(user)) {
                 for (String data : dataList) {
-                    if (data.equals(location.getUser())) {
+                    Log.i("ListUserLocations","data:"+data+", ("+location.getLat()+","+location.getLng()+")");
+                    if (data.equals("("+location.getLat()+","+location.getLng()+")")) {
                         alreadyInDataList = true;
+                        Log.i("ListUserLocations","alreadyInDataList(true)");
                     }
                 }
                 if (!alreadyInDataList) {
-                    dataList.add(location.getUser());
-                    alreadyInDataList=false;
+                    dataList.add("("+location.getLat()+","+location.getLng()+")");
+                    Log.i("ListUserLocations","dataLost.add()");
                 }
 
             }
+
         }
+
+
 
         ListView listView = (ListView) findViewById(R.id.list_locationUsers);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
